@@ -57,17 +57,16 @@ Fs_max = max(theta * k * l/2)
 %% Part d. Half Spring Force Dashpot Location
 
 a = l/2
-
 r = w/wn
 z = (3*c*a^2)/(8*sqrt(3*k*m))
 wd = sqrt(1 - z^2)*wn
 phi = atan(2*z*r/(1-r^2))
-K = sqrt((theta0 - z*wn)^2 + (theta0*wd)^2)
-lambda = asin(theta0*wd/K)
+% K = sqrt((theta0 - z*wn)^2 + (theta0*wd)^2)
+lamda = asin(theta0*wd/K)
 X = f0/(k*sqrt((1-r^2)^2 + (2*z*r)^2))
-phi0 = asin((thetadot0 + w*X*sin(-phi))/K)-lambda
+% phi0 = asin((thetadot0 + w*X*sin(-phi))/K)-lamda
 
-response = theta0.*(exp(-z*wn.*t1)).*sin(wd.*t1 + phi0) + X.*cos(w.*t1 - phi);
+response = acos((0.5-z*wn)*(0.1-X*cos(phi)+w*X*sin(-phi))/(phi0*wd));
 
 Fk = k * response *l/2;
 
