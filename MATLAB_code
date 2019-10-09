@@ -1,0 +1,73 @@
+%% ENGR 461 - 01 Mechanical and Structural Vibrations
+% Professor Chen
+% Fall 2019
+
+% Gorup 2:
+% Chris Esquivel
+% Ryan Fillhouer
+% Alex Nguyen
+% Brandon Clark
+
+%% Initialize Variables, Terms, and Initial Conditions
+w=3
+m=200
+l=2
+k=1000
+c = 100
+p0=10
+thetadot0=.5
+theta0=.1
+tfinal=20
+f0=2*p0
+dell=f0/k
+wn=sqrt((3*k)/(16*m))
+
+%% Part b. System Response
+syms t
+Gt =(theta0-dell/(1-(w/wn)^2))*cos(wn*t)+(thetadot0/wn)*sin(wn*t)+(dell/(1-(w/wn)^2))*cos(w*t)
+
+figure
+fplot(Gt)
+
+xlim([0 tfinal])
+ylim([-0.6 0.6])
+title('Angular Displacement vs. Time')
+xlabel('Time, t (seconds)')
+ylabel('Angular Displacement, \theta (radians)')
+
+
+%% Part c. Max Value of Spring Force
+
+t1 = 0:0.01:tfinal;
+
+theta = (theta0-dell/(1-(w/wn)^2))*cos(wn.*t1)+(thetadot0/wn)*sin(wn.*t1)+(dell/(1-(w/wn)^2))*cos(w.*t1);
+Fs = Gt * k * l/2;
+
+figure 
+fplot(Fs)
+
+xlim([0 tfinal])
+ylim([-540 540])
+title('Spring Force vs. Time')
+xlabel('Time, t (seconds)')
+ylabel('Magnitude of Spring Force, F_s (Newtons)')
+
+Fs_max = max(theta * k * l/2)
+
+%% Part d. Half Spring Force Dashpot Location
+
+a = l/2
+
+r = w/wn
+z = (3*c*a^2)/(8*sqrt(3*k*m))
+wd = sqrt(1 - z^2)*wn
+phi = atan(2*z*r/(1-r^2))
+K = sqrt((theta0 - z*wn)^2 + (theta0*wd)^2)
+lambda = asin(theta0*wd/K)
+X = f0/(k*sqrt((1-r^2)^2 + (2*z*r)^2))
+phi0 = asin((thetadot0 + w*X*sin(-phi))/K)-lambda
+
+response = theta0.*(exp(-z*wn.*t1)).*sin(wd.*t1 + phi0) + X.*cos(w.*t1 - phi);
+
+Fk = k * response *l/2;
+
